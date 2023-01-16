@@ -1,7 +1,7 @@
 {
-  "name": "node-ws",
+  "name": "external-notifications-api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "license": "MIT",
   "dependencies": {
     "@types/express": "^4.17.15",

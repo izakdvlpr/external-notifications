@@ -27,7 +27,6 @@ import com.izakdvlpr.externalnotifications.theme.ExternalNotificationsTheme
 import io.socket.client.IO
 import org.json.JSONArray
 
-
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -68,7 +67,13 @@ fun ExternalNotifications() {
 
   LaunchedEffect(key1 = hasNotificationPermission) {
     if (hasNotificationPermission) {
-      val socket = IO.socket("http://10.0.0.103:3333")
+      val userId = "izak"
+
+      val options =  IO.Options.builder()
+        .setQuery("userId=$userId")
+        .build()
+
+      val socket = IO.socket("http://10.0.0.103:3333", options)
 
       socket.on("notificationsUnread") { args ->
         val data = args[0] as JSONArray

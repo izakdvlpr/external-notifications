@@ -3,53 +3,72 @@ const { randomUUID } = require('node:crypto');
 
 const express = require('express');
 const cors = require('cors');
-
 const { Server: WebsocketServer } = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
 const ws = new WebsocketServer(server, {
-  cors: { origin: '*' },
+  cors: {
+    origin: '*',
+  },
 });
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(
+  express.urlencoded({
+    extended: false,
+  }),
+);
 
 app.use(cors());
 
-const fakeRecipientId = '84b4192a-e8cb-4dbc-a370-8807eed43e97';
-const fakeNotificationsData = [];
+const connectionsData = {};
+const notificationsData = [];
+
+ws.on('connection', socket => {
+  const { userId } = socket.handshake.query;
+
+  if (!userId) return;
+
+  connectionsData[userId] = socket.id;
+
+  console.log('Client connected:', userId);
+});
 
 app.post('/notifications', (request, response) => {
-  const { content } = request.body;
+  const { recipientId, content } = request.body;
 
   const newNotification = {
     id: randomUUID(),
-    recipientId: fakeRecipientId,
+    recipientId,
     content,
     readAt: null,
   };
 
-  fakeNotificationsData.push(newNotification);
+  notificationsData.push(newNotification);
 
-  ws.emit('notificationCreate', newNotification);
+  const userSocket = connectionsData[recipientId];
 
-  ws.emit(
+  ws.to(userSocket).emit('notificationCreate', newNotification);
+
+  ws.to(userSocket).emit(
     'notificationsUnread',
-    fakeNotificationsData.filter(({ readAt }) => !readAt),
+    notificationsData.filter(({ readAt }) => !readAt),
   );
 
   response.status(200).send();
 });
 
 app.get('/notifications', (request, response) => {
-  response.json(fakeNotificationsData);
+  response.json(notificationsData);
 });
 
 app.patch('/notifications/:id/read', (request, response) => {
   const { id } = request.params;
 
-  const notification = fakeNotificationsData.find(nt => nt.id === id);
+  const notification = notificationsData.find(
+    ({ id: notificationId }) => notificationId === id,
+  );
 
   if (!notification) {
     response.status(400).json({ message: 'Notification not found.' });
