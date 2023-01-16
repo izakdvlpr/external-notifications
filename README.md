@@ -1,3 +1,3 @@
 # external-notifications
 
-Handling background jobs on Android
+Handling external notifications locally and in the background on Android.
