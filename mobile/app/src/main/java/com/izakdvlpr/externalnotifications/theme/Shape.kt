@@ -1,4 +1,4 @@
-package com.izakdvlpr.externalnotifications.ui.theme
+package com.izakdvlpr.externalnotifications.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
