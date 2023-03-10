@@ -17,7 +17,7 @@
       tools:targetApi="33"
       android:usesCleartextTraffic="true">
     <service
-      android:name=".ExternalNotificationsService"
+      android:name=".services.SendUnreadNotificationsService"
       android:enabled="true"
       android:exported="false"/>
 

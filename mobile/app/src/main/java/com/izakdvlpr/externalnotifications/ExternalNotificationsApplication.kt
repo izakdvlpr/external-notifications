@@ -5,7 +5,7 @@ import android.app.Application
 import android.app.Application.ActivityLifecycleCallbacks
 import android.content.Intent
 import android.os.Bundle
-
+import com.izakdvlpr.externalnotifications.services.SendUnreadNotificationsService
 
 class ExternalNotificationsApplication : Application(), ActivityLifecycleCallbacks {
   private var externalNotificationsServiceIntent: Intent? = null
@@ -13,7 +13,7 @@ class ExternalNotificationsApplication : Application(), ActivityLifecycleCallbac
   override fun onCreate() {
     super.onCreate()
 
-    externalNotificationsServiceIntent = Intent(this, ExternalNotificationsService::class.java)
+    externalNotificationsServiceIntent = Intent(this, SendUnreadNotificationsService::class.java)
 
     registerActivityLifecycleCallbacks(this)
   }
@@ -24,12 +24,11 @@ class ExternalNotificationsApplication : Application(), ActivityLifecycleCallbac
   }
 
   override fun onActivityResumed(activity: Activity) {
-    startService(externalNotificationsServiceIntent)
-//    stopService(externalNotificationsServiceIntent)
+    stopService(externalNotificationsServiceIntent)
   }
 
   override fun onActivityPaused(activity: Activity) {
-//    startService(externalNotificationsServiceIntent)
+    startService(externalNotificationsServiceIntent)
   }
 
   override fun onActivityStopped(activity: Activity) {

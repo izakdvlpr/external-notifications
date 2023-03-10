@@ -1,8 +1,6 @@
 package com.izakdvlpr.externalnotifications
 
 import android.Manifest
-import android.app.ActivityManager
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -22,21 +20,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.ContextCompat
 import com.izakdvlpr.externalnotifications.theme.ExternalNotificationsTheme
 
-
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     setContent {
       ExternalNotificationsTheme {
-        StartNotificationService()
+        Home()
       }
     }
   }
 }
 
 @Composable
-fun StartNotificationService() {
+fun Home() {
   val context = LocalContext.current
 
   var hasNotificationPermission by remember {
